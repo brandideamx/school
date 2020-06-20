@@ -26,7 +26,8 @@ class InitialSettings extends Seeder
                     "required" => true,
                     "rules" => "required",
                     "editable" => false,
-                    "order" => 0
+                    "order" => 0,
+                    "visible_in_table" => true,
                 ],
                 "authorized_persons" => [
                     "label" => "Personas autorizadas",
@@ -37,7 +38,8 @@ class InitialSettings extends Seeder
                     "required" => true,
                     "rules" => "required",
                     "editable" => false,
-                    "order" => 1
+                    "order" => 1,
+                    "visible_in_table" => true,
                 ],
                 "curp" => [
                     "label" => "CURP",
@@ -48,7 +50,26 @@ class InitialSettings extends Seeder
                     "required" => true,
                     "rules" => "required",
                     "editable" => false,
-                    "order" => 2
+                    "order" => 2,
+                    "visible_in_table" => true,
+                ],
+                "tutors" => [
+                    "label" => "Tutores",
+                    "placeholder" => "",
+                    "value" => "",
+                    "type" => "select",
+                    "multiple" => true,
+                    "options" => [
+                        '1' => 'Primer valor',
+                        '2' => 'Segundo valor',
+                        '3' => 'Tercer valor'
+                    ],
+                    "visible" => false,
+                    "required" => false,
+                    "rules" => "",
+                    "editable" => false,
+                    "order" => 3,
+                    "visible_in_table" => false,
                 ]
             ])
         ]);

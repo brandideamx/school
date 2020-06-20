@@ -18,6 +18,7 @@ class ClassGroup extends Migration
             $table->integer('class_id');
             $table->integer('group_id');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

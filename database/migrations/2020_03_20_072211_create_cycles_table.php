@@ -20,6 +20,7 @@ class CreateCyclesTable extends Migration
             $table->date('ends');
             $table->boolean('active')->default(0);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

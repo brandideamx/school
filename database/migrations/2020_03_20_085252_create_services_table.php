@@ -27,6 +27,7 @@ class CreateServicesTable extends Migration
             $table->date('starts')->nullable();
             $table->date('ends')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

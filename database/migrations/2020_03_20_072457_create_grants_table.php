@@ -19,6 +19,7 @@ class CreateGrantsTable extends Migration
             $table->integer('student_id');
             $table->integer('percentage');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

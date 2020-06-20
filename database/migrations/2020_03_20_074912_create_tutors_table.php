@@ -19,6 +19,7 @@ class CreateTutorsTable extends Migration
             $table->integer('user_id')->nullable();
             $table->longText('properties');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

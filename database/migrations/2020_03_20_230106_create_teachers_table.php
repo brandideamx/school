@@ -18,6 +18,7 @@ class CreateTeachersTable extends Migration
             $table->integer('user_id');
             $table->longText('properties');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

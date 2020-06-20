@@ -20,6 +20,7 @@ class CreateOrderPaymentsTable extends Migration
             $table->integer('media_id')->nullable();
             $table->decimal('amount', 8, 2);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

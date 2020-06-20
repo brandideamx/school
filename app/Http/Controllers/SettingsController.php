@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Setting;
+use Validator;
 
 class SettingsController extends Controller
 {
@@ -38,7 +39,20 @@ class SettingsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = $this->validateFields($request->all(), 'store');
+        if($validator->passes()) {
+            Setting::create($request->all());
+            return response()->json([
+                'success' => true,
+                'message' => 'Ajuste guardado exitosamente'
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tienes algunos errores',
+                'errors' => $validator->errors()
+            ]);
+        }
     }
 
     /**
@@ -60,7 +74,19 @@ class SettingsController extends Controller
      */
     public function edit($id)
     {
-        //
+        $setting = Setting::whereId($id)->first();
+
+        if($setting) {
+            return [
+                'success' => true,
+                'data' => $setting
+            ];
+        }
+
+        return [
+            'success' => false,
+            'message' => 'Parametro no encontrado'
+        ];
     }
 
     /**
@@ -72,7 +98,35 @@ class SettingsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $setting = Setting::whereId($id)->first();
+
+        if($setting) {
+            $validator = $this->validateFields($request->all(), 'update');
+            if($validator->passes()) {
+                $setting->update($request->all());
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Ajuste actualizado exitosamente'
+                ]);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Tienes algunos errores',
+                    'errors' => $validator->errors()
+                ]);
+            }
+
+
+            return [
+                'success' => true,
+                'data' => $setting
+            ];
+        }
+
+        return [
+            'success' => false,
+            'message' => 'Parametro no encontrado'
+        ];
     }
 
     /**
@@ -83,7 +137,20 @@ class SettingsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $setting = Setting::whereId($id)->first();
+
+        if($setting) {
+            $setting->delete();
+            return [
+                'success' => true,
+                'message' => 'Ajuste eliminado exitosamente'
+            ];
+        }
+
+        return [
+            'success' => false,
+            'message' => 'Parametro no encontrado'
+        ];
     }
 
     public function getSetting($name) {
@@ -100,5 +167,33 @@ class SettingsController extends Controller
             'success' => false,
             'message' => 'Parametro no encontrado'
         ];
+    }
+
+    private function validateFields($fields, $action = 'store') {
+        $nameRules = '';
+        switch($action) {
+            case 'store':
+                $nameRules = 'required|unique:settings';
+            break;
+            case 'update':
+                $nameRules = 'required'; 
+            break;
+        }
+        $rules = [
+            'name' => $nameRules,
+            'description' => 'required',
+            'value' => 'required'
+        ];
+
+        $messages = [
+            'name.required' => 'El nombre es requerido',
+            'name.unique' => 'Este nombre ya existe, por favor elige otro',
+            'description.required' => 'La descripción es requerida',
+            'value.required' => 'El valor es requerido' 
+        ];
+
+        $validator = Validator::make($fields, $rules, $messages);
+
+        return $validator;
     }
 }

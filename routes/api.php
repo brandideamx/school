@@ -19,13 +19,14 @@ Route::group([
 ], function () {
     Route::post('login', 'AuthController@login');
     Route::post('signup', 'AuthController@signup');
-    Route::resource('students', 'StudentsController');
-    Route::get('settings/getvalue/{name}', 'SettingsController@getSetting');
-    Route::resource('settings', 'SettingsController');
-
+    
     Route::group([
-      'middleware' => 'auth:api'
+        'middleware' => 'auth:api'
     ], function() {
+        Route::post('students/search', 'StudentsController@search');
+        Route::resource('students', 'StudentsController');
+        Route::get('settings/getvalue/{name}', 'SettingsController@getSetting');
+        Route::resource('settings', 'SettingsController');
         Route::get('logout', 'AuthController@logout');
         Route::get('user', 'AuthController@user');
     });

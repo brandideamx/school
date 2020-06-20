@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\User;
+use Validator;
+
 class AuthController extends Controller
 {
     /**
@@ -45,11 +47,23 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        $request->validate([
+        // $request->validate([
+        //     'email' => 'required|string|email',
+        //     'password' => 'required|string',
+        //     'remember_me' => 'boolean'
+        // ]);
+        $rules = [
             'email' => 'required|string|email',
             'password' => 'required|string',
             'remember_me' => 'boolean'
-        ]);
+        ];
+        $validator = Validator::make($request->all(), $rules);
+        if($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Usuario o contraseña incorrectos'
+            ], 200);
+        }
         $credentials = request(['email', 'password']);
         if(!Auth::attempt($credentials))
             return response()->json([
@@ -68,7 +82,7 @@ class AuthController extends Controller
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
-                'role' => $user->role_id,
+                'role' => $user->Role->name,
                 'access_token' => $tokenResult->accessToken,
                 'token_type' => 'Bearer',
                 'expires_at' => Carbon::parse(
@@ -87,6 +101,7 @@ class AuthController extends Controller
     {
         $request->user()->token()->revoke();
         return response()->json([
+            'success' => true,
             'message' => 'Successfully logged out'
         ]);
     }
